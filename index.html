@@ -1,434 +1,1584 @@
 <!DOCTYPE html>
-<html>
-<title>Zhen Zhou's Blog</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-</style>
-<body class="w3-light-grey w3-content" style="max-width:1600px">
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zhen Zhou's Blog | 周臻的个人博客</title>
+  <meta name="description" content="周臻的个人学术博客，分享机器学习、统计学、因果推断等领域的学习心得与项目实践">
+  
+  <!-- External Resources -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,700">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #1a5276;
+      --secondary-color: #2ecc71;
+      --accent-color: #e74c3c;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #2c3e50;
+      --text-secondary: #5d6d7e;
+      --text-muted: #85929e;
+      --border-color: #e5e8e8;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:250px;" id="mySidebar"><br>
-  <div class="w3-container">
-    <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
-      <i class="fa fa-remove"></i>
-    </a>
-    <img src="636234904815227418.jpg" style="width:45%;" class="w3-round"><br><br>
-    <h4><b>文件夹</b></h4>
-    
-  </div>
-  <div class="w3-bar-block">
-    <a href="#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>内容</a> 
-    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>关于我</a> 
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>联系</a>
-  </div>
-  <div class="w3-panel w3-large">
-    <i class="fa fa-facebook-official w3-hover-opacity"></i>
-    <a href="https://github.com/Zhenz2020"><i class="fa fa-github w3-hover-opacity"></i></a>
-    <a href="https://www.linkedin.com/in/%E8%87%BB-%E5%91%A8-7385b2219/"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
-  </div>
-</nav>
+    [data-theme="dark"] {
+      --primary-color: #5dade2;
+      --secondary-color: #58d68d;
+      --accent-color: #ec7063;
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #16213e;
+      --bg-card: #0f3460;
+      --text-primary: #eaecee;
+      --text-secondary: #aab7b8;
+      --text-muted: #7f8c8d;
+      --border-color: #2c3e50;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+    }
 
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:250px">
+    body {
+      font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
 
+    /* Header & Navigation */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] .header {
+      background: rgba(26,26,46,0.95);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary-color);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      margin-top: 70px;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+      opacity: 0.1;
+      border-radius: 50%;
+    }
+
+    .hero-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+    }
+
+    .hero-image:hover img {
+      transform: translateY(-10px);
+    }
+
+    /* Search & Filter Section */
+    .filter-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+    }
+
+    .filter-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 300px;
+      max-width: 500px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px 12px 50px;
+      border: 2px solid var(--border-color);
+      border-radius: 50px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(26, 82, 118, 0.1);
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-tag {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .filter-tag:hover,
+    .filter-tag.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    /* Category Cards */
+    .categories-section {
+      padding: 3rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .category-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .category-icon.statistics { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .category-icon.application { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .category-icon.fundamental { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .category-icon.thinking { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+    .category-info h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .category-info p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Posts Grid */
+    .posts-section {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .post-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .post-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .post-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .post-card:hover .post-image img {
+      transform: scale(1.05);
+    }
+
+    .post-category {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .post-content {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-date {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .post-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .post-title a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .post-title a:hover {
+      color: var(--primary-color);
+    }
+
+    .post-excerpt {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .post-tag {
+      padding: 4px 10px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* About Section */
+    .about-section {
+      padding: 4rem 2rem;
+      background: var(--bg-secondary);
+      margin-top: 4rem;
+    }
+
+    .about-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .about-images img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .about-content h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-content p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+
+    .about-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    /* Contact Section */
+    .contact-section {
+      padding: 4rem 2rem;
+      background: var(--bg-primary);
+    }
+
+    .contact-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .contact-card {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .contact-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .contact-card i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .contact-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card p {
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .footer p {
+      color: var(--text-muted);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .social-links a:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-4px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+
+    .no-results i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-image {
+        order: -1;
+      }
+
+      .about-container {
+        grid-template-columns: 1fr;
+      }
+
+      .about-images {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        max-width: none;
+      }
+
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
   <!-- Header -->
-  <header id="portfolio">
-    <!--<a href="#"><img src="avatar_g2.jpg" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>-->
-    <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
-    <div class="w3-container">
-    <h1><b>Zhen Zhou's Blog</b></h1>
-    <div class="w3-section w3-bottombar w3-padding-16">
-      <span class="w3-margin-right">Filter:</span> 
-      <button class="w3-button w3-black">ALL</button>
-      <a href="index_statistics.html"><button class="w3-button w3-white"><i class="fa fa-graduation-cap w3-margin-right"></i>统计</button></a>
-      <a href="index_application.html"><button class="w3-button w3-white w3-hide-small"><i class="fa fa-laptop w3-margin-right"></i>应用</button></a>
-      <a href="index_thinking.html"><button class="w3-button w3-white w3-hide-small"><i class="fa fa-tree w3-margin-right"></i>闲话</button></a>
-      <a href="index_fundamental.html"><button class="w3-button w3-white w3-hide-small"><i class="fa fa-book w3-margin-right"></i>基础</button></a>
-    </div>
+  <header class="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="assets/images/profile/avatar.jpg" alt="Zhen Zhou">
+        <span>Zhen Zhou's Blog</span>
+      </a>
+      
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">首页</a></li>
+          <li><a href="#posts">文章</a></li>
+          <li><a href="#categories">分类</a></li>
+          <li><a href="#about">关于</a></li>
+          <li><a href="#contact">联系</a></li>
+        </ul>
+      </nav>
+      
+      <div class="nav-actions">
+        <button class="btn-icon" id="themeToggle" title="切换主题">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
     </div>
   </header>
 
-  <div class="w3-row w3-margin w3-card">
-     <div class="w3-third">
-     <a href="huawei/供应链交流会0803_20230910145916.pdf"><img src="huawei/图片1.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="huawei/供应链交流会0803_20230910145916.pdf" title="lane" target="_blank" class="w3-hover-opacity">供应链自动预测与可信调控</a></h4>
-        <p>火花奖的材料，关于一个全流程的供应链自动预测与可信调控的框架，并进行了demo展示</p>
-        <p>2023-09-03<p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content animate-fadeInUp">
+        <h1>探索数据科学的<br>无限可能</h1>
+        <p>这里是周臻的个人学术博客，记录机器学习、统计学、因果推断等领域的学习心得与项目实践。从理论推导到代码实现，与你分享数据科学的精彩世界。</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">26+</div>
+            <div class="stat-label">原创文章</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">5</div>
+            <div class="stat-label">分类领域</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">年研究经验</div>
+          </div>
+        </div>
+        <div class="about-actions">
+          <a href="#posts" class="btn btn-primary">
+            <i class="fas fa-book-open"></i> 浏览文章
+          </a>
+          <a href="https://github.com/Zhenz2020" target="_blank" class="btn btn-secondary">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-image animate-fadeInUp delay-1">
+        <img src="assets/images/profile/INUIUC.jpg" alt="Zhen Zhou at UIUC">
       </div>
     </div>
-  
-    <div class="w3-row w3-margin w3-card">
-     <div class="w3-third">
-     <a href="Causal/Causal%20Estimation.pdf"><img src="Causal/uplift.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Causal/Causal%20Estimation.pdf" title="lane" target="_blank" class="w3-hover-opacity">因果推断理论整理</a></h4>
-        <p>这篇文档整理了因果推断的基础定义与假设，主要梳理了连续变量的因果效应的计算（Propensity score, LinearDML, Causal forests）与因果发现的一个工具转移熵的计算（未完成，持续更新中）</p>
-        <p>2023-03-26<p>
-      </div>
-    </div>
-  
-  <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="Gatech_CS/TD_report.pdf"><img src="Gatech_CS/TD.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Gatech_CS/TD_report.pdf" title="lane" target="_blank" class="w3-hover-opacity">TD(lambda)算法的复现与简单应用</a></h4>
-        <p>TD作为强化学习中最重要与最基础的模型，是学习强化学习的第一步，本文使用了TD(lambda)模型对随机游走游戏进行了预测，也是对1988年Sutton论文的复现</p>
-        <p>2023-02-10<p>
-      </div>
-    </div>
-  
-  <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="ml4t/strategyEval_report.pdf"><img src="ml4t/Manual_Strategy_out.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="ml4t/strategyEval_report.pdf" title="lane" target="_blank" class="w3-hover-opacity">机器学习在制定股票交易策略中的应用</a></h4>
-        <p>机器学习用于制定股票交易策略，第一部分使用了股票的指标因子手动选择股票交易策略，第二部分使用了强化学习Qlearner进行基于机器学习的自动股票策略的制定</p>
-        <p>2022-12-8<p>
-      </div>
-    </div>
-  
-      <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="Diffusion_model/DF_overview.html"><img src="Diffusion_model/diffusion_process.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Diffusion_model/DF_overview.html" title="lane" target="_blank" class="w3-hover-opacity">Diffusion Model的理论推导</a></h4>
-        <p>和龙龙开了一个新坑，本文参考了网络的资料，对于Diffusion Model的基础模型做了一个理论的推导</p>
-        <p>2022-9-9<p>
-      </div>
-    </div>
-  
-    <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="maunscript_final.pdf"><img src="lambda_plot.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="maunscript_final.pdf" title="lane" target="_blank" class="w3-hover-opacity">车路协同背景下基于因果推断对于换道的优化</a></h4>
-        <p>半个暑假的成果，从效率、安全、环保的角度做了一个优化换道的框架，用了因果推断来构建</p>
-        <p>2022-8-20<p>
-      </div>
-    </div>
-  
-  <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="lane_change_using_other_dataset.pdf"><img src="causal_lanechange.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="lane_change_using_other_dataset.pdf" title="lane" target="_blank" class="w3-hover-opacity">因果推断用于换道预测</a></h4>
-        <p>进行中论文的初步展示，使用了公开的数据集做的车辆换道因果推断，构造了因果图，使用的效应估计方法是backdoor.linear_regression，使用的反驳方法是placebo_treatment_refuter，查看变量是否与outcome variable有因果关系，并初步进行了一些敏感度分析</p>
-        <p>2022-5-10<p>
-      </div>
-    </div>
-  
-     <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="group_lasso.html"><img src="group-lasso.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="group_lasso.html" title="lasso" target="_blank" class="w3-hover-opacity">Group Lasso的smoothing与accelerate实现方法</a></h4>
-        <p>将accelerated proximal gradient descent method and accelerated gradient descent method smoothed problem两个方法应用于group lasso，使用R进行了代码复现与收敛速度与精度的分析</p>
-        <p>2022-4-11<p>
-      </div>
-    </div>
-  
-  
-     <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="Lasso-three-methods.pdf"><img src="lasso-three.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Lasso-three-methods.pdf" title="lasso" target="_blank" class="w3-hover-opacity">Lasso的三个实现方法的代码复现</a></h4>
-        <p>将subgradient descent, proximal gradient descent and accelerated proximal gradient descent methods三个方法应用于lasso，使用R进行了代码复现与收敛速度与精度的分析</p>
-        <p>2022-4-11<p>
-      </div>
-    </div>
-  
-     <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="Gradient_descent.html"><img src="GD.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="Gradient_descent.html" title="GD" target="_blank" class="w3-hover-opacity">关于梯度下降的几个方法的例子</a></h4>
-        <p>使用R，编写了Gradient Descent Using Backtracking Line Search，constrained optimization的Frank Wolfe Method and Projected Gradient Descent Method三个方法，并进行了数据上的实验</p>
-        <p>2022-3-4<p>
-      </div>
-     </div>
-  
-     <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="covid.pdf"><img src="covid.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="covid.pdf" title="covid" target="_blank" class="w3-hover-opacity">关于新冠的一些简单的数据分析</a></h4>
-        <p>关于新冠数据的数据分析，使用了滞后的回归模型去回归死亡人数，SARIMA模型去预测未来的确诊人数。</p>
-        <p>2021-12-10<p>
-      </div>
-     </div>
-  
-     <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="text2vector.html"><img src="xiaowu.jpg" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="text2vector.html" title="movie" target="_blank" class="w3-hover-opacity">影评情感分析</a></h4>
-        <p>电影影评情感分析，建立一个二元分类模型来预测电影评论的情绪，使用text2vec函数，实现了word list的创建，DT matrix的构建，使用ridge regression进行预测。</p>
-        <p>2021-11-27<p>
-      </div>
-     </div>
-  
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="dice_game.html"><img src="dice_game_pic.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="dice_game.html" title="house_price" target="_blank" class="w3-hover-opacity">一个大话骰的web app，基于shiny</a></h4>
-        <p>上一篇文章的后续，使用shiny做了一个交互，一个web app，根据上一篇文章的模型，实时计算大话骰的决策。<a href="https://p3bvl1-zhenz2020.shinyapps.io/dice_drink/?_ga=2.121893899.1675958068.1639196922-1849805073.1637384782" title="dice" target="_blank" class="w3-hover-opacity">web app链接</a></p>
-        <p>2021-11-20<p>
-      </div>   
-    </div>
-  
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="DICE_DRINK.html"><img src="shaizi.jpg" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="DICE_DRINK.html" title="house_price" target="_blank" class="w3-hover-opacity">大话骰游戏辅助</a></h4>
-        <p>一个国内经常用作喝酒助兴的小游戏的辅助程序，比较粗浅的对游戏进行了建模，也用R实现了游戏的辅助功能。</p>
-        <p>2021-11-18<p>
-      </div>
-    </div>
- 
-  
-   
-     <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="House_price.html"><img src="house_price.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="House_price.html" title="house_price" target="_blank" class="w3-hover-opacity">房价预测</a></h4>
-        <p>一次完整的预测任务，Ames房价数据集，根据83个变量预测房价。这个项目中主要聚焦于数据预处理，包括缺失值处理、非数值变量转变为虚拟变量、Winsorization、归一化、对数转换。</p>
-        <p>2021-11-07<p>
-      </div>
-    </div>
-  
-  
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="ARMA.html"><img src="GN.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="ARMA.html" title="ARMA" target="_blank" class="w3-hover-opacity">Gauss-Newton算法与时间序列模型</a></h4>
-        <p>Gauss-Newton iteration method 是非线性回归模型中求回归参数进行最小二乘的一种迭代方法，该法使用泰勒级数展开式去近似地代替非线性回归模型，然后通过多次迭代修正回归系数，使回归系数不断逼近非线性回归模型的最佳回归系数，本文使用该方法去拟合两个时间序列模型</p>
-        <p>2021-10-22<p>
-      </div>
-    </div>
-    
-  
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="MH_algorithm.html"><img src="MH.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="MH_algorithm.html" title="paper1" target="_blank" class="w3-hover-opacity">MH算法</a></h4>
-        <p>使用R，对马尔可夫链蒙特卡罗（MCMC）方法中的MH算法的两个例子进行算法实现，其中第一个目标分布为双指数分布的MH算法实例，proposed分布是sd=1的正态分布。另一个是使用硬币去估计骰子的分布，目标分布也即每类的概率都是1/6，给出了状态转移矩阵作为propose</p>
-        <p>2021-10-12<p>
-      </div>
-    </div>
+  </section>
 
-    
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="多项式回归.html"><img src="多项式-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
+  <!-- Filter Section -->
+  <section class="filter-section">
+    <div class="filter-container">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="搜索文章标题、内容或标签...">
       </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="多项式回归.html" title="paper1" target="_blank" class="w3-hover-opacity">基础教学二：多项式回归</a></h4>
-        <p>上一讲讲的线性回归，本讲是关于多项式回归的python代码实现，多项式回归作为线性回归的一个重要组成部分，有着简单快捷，可解释性强的优点，可以拟合非线性数据，但多项式回归同样也存在需要先验知识，也就是需要设置变量的指数，也存在过拟合的问题。</p>
-        <p>2021-10-11<p>
-      </div>
-    </div>
-
-
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="NCS-kmeans.html"><img src="NCS-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="NCS-kmeans.html" title="paper1" target="_blank" class="w3-hover-opacity">结合NCS的k-means对时间序列进行分类</a></h4>
-        <p>参考了一篇文章，使用R尝试一个使用NCS对数据进行“降维”，再使用k-means进行分类的方法，该方法可以有效的减缓单纯进行时间序列数据分类时出现的过拟合与忽略时间序列间上下移动的信息的问题，虽然“降维”过程存在信息损失，但至少包含了比较“全面”的信息，所以理论上有着更好的分类效果，本文进行了尝试</p>
-        <p>2021-10-8<p>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-filter="all">全部</button>
+        <button class="filter-tag" data-filter="statistics">统计学习</button>
+        <button class="filter-tag" data-filter="application">实际应用</button>
+        <button class="filter-tag" data-filter="fundamental">基础教学</button>
+        <button class="filter-tag" data-filter="thinking">随笔思考</button>
       </div>
     </div>
+  </section>
 
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="LOO-CV_GCV.html"><img src="LOO-CV.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="LOO-CV_GCV.html" title="LOO-CV-GCV" target="_blank" class="w3-hover-opacity">LOO-CV与GCV帮助LOOES寻找最优span</a></h4>
-        <p>本文展示了怎样使用LOO-CV与GCV（舍一交叉验证与广义交叉验证）交叉验证方法去对不同span计算相应误差，寻找LOESS（局部加权多项式回归）中的最小的误差与对应的最优span，最后展示出最优span下真实曲线与回归曲线的差异。</p>
-        <p>2021-10-7<p>
-      </div>
+  <!-- Categories Section -->
+  <section class="categories-section" id="categories">
+    <h2 class="section-title">文章分类</h2>
+    <div class="categories-grid">
+      <a href="index_statistics.html" class="category-card">
+        <div class="category-icon statistics">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="category-info">
+          <h3>统计学习</h3>
+          <p>12 篇文章</p>
+        </div>
+      </a>
+      <a href="index_application.html" class="category-card">
+        <div class="category-icon application">
+          <i class="fas fa-laptop-code"></i>
+        </div>
+        <div class="category-info">
+          <h3>实际应用</h3>
+          <p>8 篇文章</p>
+        </div>
+      </a>
+      <a href="index_fundamental.html" class="category-card">
+        <div class="category-icon fundamental">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="category-info">
+          <h3>基础教学</h3>
+          <p>3 篇文章</p>
+        </div>
+      </a>
+      <a href="index_thinking.html" class="category-card">
+        <div class="category-icon thinking">
+          <i class="fas fa-lightbulb"></i>
+        </div>
+        <div class="category-info">
+          <h3>随笔思考</h3>
+          <p>2 篇文章</p>
+        </div>
+      </a>
     </div>
+  </section>
+
+  <!-- Posts Section -->
+  <section class="posts-section" id="posts">
+    <h2 class="section-title">最新文章</h2>
+    <div class="posts-grid" id="postsGrid">
       
+      <!-- Post 1: TRIP-Evaluation -->
+      <article class="post-card" data-category="application" data-tags="交通大模型,多模态评测,LLM">
+        <div class="post-image">
+          <img src="assets/images/projects/trip_evaluation_cover.png" alt="TRIP-Evaluation">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2025-02-28</div>
+          <h3 class="post-title">
+            <a href="TRIP_Evaluation/TRIP-Evaluation.html">TRIP-Evaluate：开源多模态综合交通大模型评测基准</a>
+          </h3>
+          <p class="post-excerpt">开源多模态综合交通大模型诊断评测基准，包含767+细粒度评测项，覆盖4大主体视角与3大感知模态，涵盖知识记忆、逻辑推理、数值计算、场景语义理解四大能力维度。</p>
+          <div class="post-tags">
+            <span class="post-tag">交通大模型</span>
+            <span class="post-tag">多模态评测</span>
+            <span class="post-tag">Benchmark</span>
+          </div>
+        </div>
+      </article>
 
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="相关性分析与线性回归.html"><img src="linear-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div>
-      <div class="w3-twothird w3-container">
-        <h4><a href="相关性分析与线性回归.html" title="linear" target="_blank" class="w3-hover-opacity">基础教学一：相关分析与线性回归</a></h4>
-        <p>给毫无基础的同学们的python学习教程，本教程不从基础出发，从项目出发，在项目中介绍python的逻辑与各种函数包，第一讲是关于相关性分析与线性回归，介绍了怎么引入数据，pandas、scipy.stats、matplotlib.pyplot、numpy等函数包的基础应用，怎么画图，也包含了基础的相关分析与线性回归的解读</p>
-        <p>2021-10-5<p>
-      </div>
+      <!-- Post 2: 供应链 -->
+      <article class="post-card" data-category="application" data-tags="供应链,优化,华为">
+        <div class="post-image">
+          <img src="assets/images/projects/huawei_supply_chain.png" alt="供应链自动预测">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2023-09-03</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/huawei_supply_chain.pdf" target="_blank">供应链自动预测与可信调控</a>
+          </h3>
+          <p class="post-excerpt">火花奖的材料，关于一个全流程的供应链自动预测与可信调控的框架，并进行了demo展示。</p>
+          <div class="post-tags">
+            <span class="post-tag">供应链</span>
+            <span class="post-tag">优化</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 3: 因果推断 -->
+      <article class="post-card" data-category="statistics" data-tags="因果推断,机器学习">
+        <div class="post-image">
+          <img src="assets/images/projects/causal_uplift.png" alt="因果推断">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2023-03-26</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/causal_estimation.pdf" target="_blank">因果推断理论整理</a>
+          </h3>
+          <p class="post-excerpt">整理了因果推断的基础定义与假设，主要梳理了连续变量的因果效应计算（Propensity score, LinearDML, Causal forests）与因果发现工具转移熵的计算。</p>
+          <div class="post-tags">
+            <span class="post-tag">因果推断</span>
+            <span class="post-tag">Causal Inference</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 3: TD Lambda -->
+      <article class="post-card" data-category="application" data-tags="强化学习,机器学习">
+        <div class="post-image">
+          <img src="assets/images/projects/gatech_td.png" alt="TD Lambda">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2023-02-10</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/td_lambda_report.pdf" target="_blank">TD(lambda)算法的复现与简单应用</a>
+          </h3>
+          <p class="post-excerpt">TD作为强化学习中最重要与最基础的模型，是学习强化学习的第一步。本文使用TD(lambda)模型对随机游走游戏进行预测，也是对1988年Sutton论文的复现。</p>
+          <div class="post-tags">
+            <span class="post-tag">强化学习</span>
+            <span class="post-tag">TD Learning</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 4: 股票交易策略 -->
+      <article class="post-card" data-category="application" data-tags="量化交易,机器学习">
+        <div class="post-image">
+          <img src="assets/images/projects/ml4t_strategy.png" alt="股票交易策略">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-12-08</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/strategy_eval_report.pdf" target="_blank">机器学习在制定股票交易策略中的应用</a>
+          </h3>
+          <p class="post-excerpt">第一部分使用股票指标因子手动选择交易策略，第二部分使用强化学习Q-learner进行基于机器学习的自动股票策略制定。</p>
+          <div class="post-tags">
+            <span class="post-tag">量化交易</span>
+            <span class="post-tag">Q-Learning</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 5: Diffusion Model -->
+      <article class="post-card" data-category="statistics" data-tags="深度学习,生成模型">
+        <div class="post-image">
+          <img src="assets/images/projects/diffusion_process.png" alt="Diffusion Model">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-09-09</div>
+          <h3 class="post-title">
+            <a href="Diffusion_model/DF_overview.html">Diffusion Model的理论推导</a>
+          </h3>
+          <p class="post-excerpt">参考网络资料，对Diffusion Model的基础模型做了完整的理论推导，从正向扩散过程到反向去噪过程。</p>
+          <div class="post-tags">
+            <span class="post-tag">深度学习</span>
+            <span class="post-tag">Diffusion</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 6: 车路协同换道 -->
+      <article class="post-card" data-category="application" data-tags="因果推断,自动驾驶">
+        <div class="post-image">
+          <img src="assets/images/covers/lambda_plot.png" alt="车路协同换道">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-08-20</div>
+          <h3 class="post-title">
+            <a href="assets/docs/papers/maunscript_final.pdf" target="_blank">车路协同背景下基于因果推断对于换道的优化</a>
+          </h3>
+          <p class="post-excerpt">从效率、安全、环保的角度构建优化换道框架，使用因果推断方法进行建模与分析。</p>
+          <div class="post-tags">
+            <span class="post-tag">因果推断</span>
+            <span class="post-tag">自动驾驶</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 7: 换道预测 -->
+      <article class="post-card" data-category="application" data-tags="因果推断,机器学习">
+        <div class="post-image">
+          <img src="assets/images/covers/causal_lanechange.png" alt="换道预测">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-05-10</div>
+          <h3 class="post-title">
+            <a href="assets/docs/papers/lane_change_using_other_dataset.pdf" target="_blank">因果推断用于换道预测</a>
+          </h3>
+          <p class="post-excerpt">使用公开数据集进行车辆换道因果推断，构造因果图，使用backdoor.linear_regression进行效应估计。</p>
+          <div class="post-tags">
+            <span class="post-tag">因果推断</span>
+            <span class="post-tag">预测模型</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 8: Group Lasso -->
+      <article class="post-card" data-category="statistics" data-tags="Lasso,优化">
+        <div class="post-image">
+          <img src="assets/images/covers/group-lasso.png" alt="Group Lasso">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-04-11</div>
+          <h3 class="post-title">
+            <a href="group_lasso.html">Group Lasso的smoothing与accelerate实现方法</a>
+          </h3>
+          <p class="post-excerpt">将accelerated proximal gradient descent method应用于group lasso，使用R进行代码复现与收敛速度分析。</p>
+          <div class="post-tags">
+            <span class="post-tag">Lasso</span>
+            <span class="post-tag">优化算法</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 9: Lasso三种方法 -->
+      <article class="post-card" data-category="statistics" data-tags="Lasso,优化,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/lasso-three.png" alt="Lasso三种方法">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-04-11</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/Lasso-three-methods.pdf" target="_blank">Lasso的三个实现方法的代码复现</a>
+          </h3>
+          <p class="post-excerpt">实现subgradient descent, proximal gradient descent和accelerated proximal gradient descent三种Lasso求解方法。</p>
+          <div class="post-tags">
+            <span class="post-tag">Lasso</span>
+            <span class="post-tag">凸优化</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 10: 梯度下降 -->
+      <article class="post-card" data-category="statistics" data-tags="优化,梯度下降,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/GD.png" alt="梯度下降">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2022-03-04</div>
+          <h3 class="post-title">
+            <a href="Gradient_descent.html">关于梯度下降的几个方法的例子</a>
+          </h3>
+          <p class="post-excerpt">使用R编写了Gradient Descent with Backtracking Line Search、Frank Wolfe Method和Projected Gradient Descent Method。</p>
+          <div class="post-tags">
+            <span class="post-tag">优化</span>
+            <span class="post-tag">梯度下降</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 11: COVID分析 -->
+      <article class="post-card" data-category="application" data-tags="数据分析,时间序列">
+        <div class="post-image">
+          <img src="assets/images/covers/covid.png" alt="COVID分析">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-12-10</div>
+          <h3 class="post-title">
+            <a href="assets/docs/projects/covid.pdf" target="_blank">关于新冠的一些简单的数据分析</a>
+          </h3>
+          <p class="post-excerpt">使用滞后回归模型分析死亡人数，使用SARIMA模型预测未来确诊人数。</p>
+          <div class="post-tags">
+            <span class="post-tag">时间序列</span>
+            <span class="post-tag">SARIMA</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 12: 影评情感分析 -->
+      <article class="post-card" data-category="application" data-tags="NLP,文本分析,R语言">
+        <div class="post-image">
+          <img src="assets/images/profile/xiaowu.jpg" alt="影评情感分析">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-11-27</div>
+          <h3 class="post-title">
+            <a href="text2vector.html">影评情感分析</a>
+          </h3>
+          <p class="post-excerpt">建立二元分类模型预测电影评论情绪，使用text2vec实现word list创建、DT矩阵构建，使用ridge regression预测。</p>
+          <div class="post-tags">
+            <span class="post-tag">NLP</span>
+            <span class="post-tag">情感分析</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 13: 大话骰Web App -->
+      <article class="post-card" data-category="thinking" data-tags="Shiny,R语言,游戏">
+        <div class="post-image">
+          <img src="assets/images/covers/dice_game_pic.png" alt="大话骰Web App">
+          <span class="post-category">随笔思考</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-11-20</div>
+          <h3 class="post-title">
+            <a href="dice_game.html">一个大话骰的web app，基于shiny</a>
+          </h3>
+          <p class="post-excerpt">使用shiny做的交互式web app，根据概率模型实时计算大话骰的最优决策。</p>
+          <div class="post-tags">
+            <span class="post-tag">Shiny</span>
+            <span class="post-tag">概率模型</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 14: 大话骰辅助 -->
+      <article class="post-card" data-category="thinking" data-tags="概率,R语言">
+        <div class="post-image">
+          <img src="assets/images/profile/shaizi.jpg" alt="大话骰辅助">
+          <span class="post-category">随笔思考</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-11-18</div>
+          <h3 class="post-title">
+            <a href="DICE_DRINK.html">大话骰游戏辅助</a>
+          </h3>
+          <p class="post-excerpt">对国内流行的喝酒助兴小游戏进行数学建模，使用R实现游戏辅助功能。</p>
+          <div class="post-tags">
+            <span class="post-tag">概率论</span>
+            <span class="post-tag">游戏理论</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 15: 房价预测 -->
+      <article class="post-card" data-category="application" data-tags="机器学习,数据预处理,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/house_price.png" alt="房价预测">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-11-07</div>
+          <h3 class="post-title">
+            <a href="House_price.html">房价预测</a>
+          </h3>
+          <p class="post-excerpt">Ames房价数据集完整预测流程，聚焦数据预处理：缺失值处理、虚拟变量转换、Winsorization、归一化、对数转换。</p>
+          <div class="post-tags">
+            <span class="post-tag">机器学习</span>
+            <span class="post-tag">数据预处理</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 16: ARMA与Gauss-Newton -->
+      <article class="post-card" data-category="statistics" data-tags="时间序列,优化,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/GN.png" alt="ARMA与Gauss-Newton">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-22</div>
+          <h3 class="post-title">
+            <a href="ARMA.html">Gauss-Newton算法与时间序列模型</a>
+          </h3>
+          <p class="post-excerpt">使用Gauss-Newton迭代方法拟合非线性时间序列模型，通过泰勒级数展开近似非线性回归模型。</p>
+          <div class="post-tags">
+            <span class="post-tag">时间序列</span>
+            <span class="post-tag">Gauss-Newton</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 17: MH算法 -->
+      <article class="post-card" data-category="statistics" data-tags="MCMC,贝叶斯,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/MH.png" alt="MH算法">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-12</div>
+          <h3 class="post-title">
+            <a href="MH_algorithm.html">MH算法</a>
+          </h3>
+          <p class="post-excerpt">MCMC方法中Metropolis-Hastings算法的两个实现案例：双指数分布采样和骰子分布估计。</p>
+          <div class="post-tags">
+            <span class="post-tag">MCMC</span>
+            <span class="post-tag">贝叶斯</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 18: 多项式回归教学 -->
+      <article class="post-card" data-category="fundamental" data-tags="Python,回归,教学">
+        <div class="post-image">
+          <img src="assets/images/covers/多项式-cover.png" alt="多项式回归">
+          <span class="post-category">基础教学</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-11</div>
+          <h3 class="post-title">
+            <a href="多项式回归.html">基础教学二：多项式回归</a>
+          </h3>
+          <p class="post-excerpt">多项式回归的Python代码实现，简单快捷、可解释性强，可以拟合非线性数据。</p>
+          <div class="post-tags">
+            <span class="post-tag">Python</span>
+            <span class="post-tag">教学</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 19: NCS K-means -->
+      <article class="post-card" data-category="statistics" data-tags="聚类,时间序列,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/NCS-cover.png" alt="NCS K-means">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-08</div>
+          <h3 class="post-title">
+            <a href="NCS-kmeans.html">结合NCS的k-means对时间序列进行分类</a>
+          </h3>
+          <p class="post-excerpt">使用自然三次样条(NCS)对时间序列降维后再进行k-means聚类，有效缓解过拟合问题。</p>
+          <div class="post-tags">
+            <span class="post-tag">聚类</span>
+            <span class="post-tag">时间序列</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 20: LOO-CV与GCV -->
+      <article class="post-card" data-category="statistics" data-tags="交叉验证,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/LOO-CV.png" alt="LOO-CV与GCV">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-07</div>
+          <h3 class="post-title">
+            <a href="LOO-CV_GCV.html">LOO-CV与GCV帮助LOESS寻找最优span</a>
+          </h3>
+          <p class="post-excerpt">使用舍一交叉验证(LOO-CV)与广义交叉验证(GCV)寻找LOESS局部加权回归的最优span参数。</p>
+          <div class="post-tags">
+            <span class="post-tag">交叉验证</span>
+            <span class="post-tag">LOESS</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 21: 线性回归教学 -->
+      <article class="post-card" data-category="fundamental" data-tags="Python,回归,教学">
+        <div class="post-image">
+          <img src="assets/images/covers/linear-cover.png" alt="线性回归">
+          <span class="post-category">基础教学</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-05</div>
+          <h3 class="post-title">
+            <a href="相关性分析与线性回归.html">基础教学一：相关分析与线性回归</a>
+          </h3>
+          <p class="post-excerpt">Python零基础教程，从项目出发介绍pandas、scipy、matplotlib等基础应用。</p>
+          <div class="post-tags">
+            <span class="post-tag">Python</span>
+            <span class="post-tag">教学</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 22: 排队论论文 -->
+      <article class="post-card" data-category="application" data-tags="排队论,MATLAB,论文">
+        <div class="post-image">
+          <img src="assets/images/covers/paper1-cover.png" alt="排队论论文">
+          <span class="post-category">实际应用</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-03</div>
+          <h3 class="post-title">
+            <a href="assets/docs/papers/My-paper.pdf" target="_blank">排队论在城市规划中的应用</a>
+          </h3>
+          <p class="post-excerpt">2020年底发表的G/M/N排队论模型在车位数量规划上的应用，基于MATLAB进行接送过程模拟。</p>
+          <div class="post-tags">
+            <span class="post-tag">排队论</span>
+            <span class="post-tag">MATLAB</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 23: KNN模型 -->
+      <article class="post-card" data-category="statistics" data-tags="机器学习,KNN,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/KNN-cover.png" alt="KNN模型">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-02</div>
+          <h3 class="post-title">
+            <a href="Assignment_1_4358_zhenz5_ZhenZhou.html">KNN模型</a>
+          </h3>
+          <p class="post-excerpt">K近邻模型完整实现，使用R完成KNN函数代码，与R自带函数比较，并进行10折交叉验证。</p>
+          <div class="post-tags">
+            <span class="post-tag">KNN</span>
+            <span class="post-tag">机器学习</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 24: Lasso回归 -->
+      <article class="post-card" data-category="statistics" data-tags="Lasso,正则化,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/Lasso-cover.png" alt="Lasso回归">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-02</div>
+          <h3 class="post-title">
+            <a href="Assignment_2_4358_zhenz5_ZhenZhou.html">Lasso回归</a>
+          </h3>
+          <p class="post-excerpt">Lasso回归R函数实现，使用Boston数据集比较lambda.min、lambda.lse、岭回归和PCR模型。</p>
+          <div class="post-tags">
+            <span class="post-tag">Lasso</span>
+            <span class="post-tag">正则化</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 25: EM算法 -->
+      <article class="post-card" data-category="statistics" data-tags="EM算法,混合模型,R语言">
+        <div class="post-image">
+          <img src="assets/images/covers/EM-cover.png" alt="EM算法">
+          <span class="post-category">统计学习</span>
+        </div>
+        <div class="post-content">
+          <div class="post-date">2021-10-02</div>
+          <h3 class="post-title">
+            <a href="stat510-hw3.html">EM算法</a>
+          </h3>
+          <p class="post-excerpt">EM期望最大算法实践案例：GMM高斯混合模型和多项分布混合主题模型的理论推导与R实现。</p>
+          <div class="post-tags">
+            <span class="post-tag">EM算法</span>
+            <span class="post-tag">混合模型</span>
+          </div>
+        </div>
+      </article>
+
     </div>
     
-      
-   <div class="w3-row w3-margin w3-card">
-     <div class="w3-third ">
-     <a href="My-paper.pdf"><img src="paper1-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-     </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="My-paper.pdf" title="paper1" target="_blank" class="w3-hover-opacity">排队论在城市规划中的应用</a></h4>
-        <p>我于2020年底发表的一篇论文，关于一个G/M/N排队论模型在车位数量规划上的应用，我基于matlab对整个接送过程进行了模拟，包括车辆到达、车辆等待，车辆离去，对于各个部分的统计分布，区域划分进行了讨论，最终对停车位数量进行规划</p>
-        <p>2021-10-3<p>
+    <div class="no-results" id="noResults" style="display: none;">
+      <i class="fas fa-search"></i>
+      <h3>没有找到相关文章</h3>
+      <p>请尝试其他关键词或筛选条件</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="about-container">
+      <div class="about-images">
+        <img src="assets/images/profile/INWUT.jpg" alt="WUT">
+        <img src="assets/images/profile/moon.jpg" alt="Moon">
+      </div>
+      <div class="about-content">
+        <h2>关于我</h2>
+        <p>本人周臻，熟悉我的人喜欢叫我周至秦，生于上个世纪末一个江南小城，浑浑噩噩度过了二十有三的光阴，有道是"敌视现实，虚构远方，东张西望，一无所长，四体不勤，五谷不分，文不能测字，武不能防身"。</p>
+        <p>求学于江城南湖畔，目前辗转越洋漂亮国读研，本科计算数学，硕士统计与计算机。五分钟热度选手，会一点MATLAB、Python、R、SQL，碰上有趣的偶尔建立建立模型，摆弄摆弄代码，谨以此个人网页记录学习生活，以求不至于被我那健忘的脑袋忘喽。</p>
+        <div class="about-actions">
+          <a href="assets/docs/cv/Zhen Zhou CV-20230501.pdf" class="btn btn-primary" target="_blank">
+            <i class="fas fa-download"></i> 英文简历
+          </a>
+          <a href="assets/docs/cv/Zhen Zhou CV中文-0923.pdf" class="btn btn-secondary" target="_blank">
+            <i class="fas fa-download"></i> 中文简历
+          </a>
+        </div>
       </div>
     </div>
+  </section>
 
-    
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="Assignment_1_4358_zhenz5_ZhenZhou.html"><img src="KNN-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Assignment_1_4358_zhenz5_ZhenZhou.html" title="KNN" target="_blank" class="w3-hover-opacity">KNN模型</a></h4>
-        <p>一个比较基础的模型实现，根据KNN模型，使用R完成了的KNN（K近邻）模型函数的代码实现，并与R中自带的KNN函数进行比较，最后把10折交叉检验的KNN分类模型与线性回归分类、二次回归分类、贝叶斯模型进行了比较</p>
-        <p>2021-10-2<p>
-      </div>
-    </div>
-       
-
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="Assignment_2_4358_zhenz5_ZhenZhou.html"><img src="Lasso-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="Assignment_2_4358_zhenz5_ZhenZhou.html" title="Lasso" target="_blank" class="w3-hover-opacity">Lasso回归</a></h4>
-        <p>根据Lasso模型，实现了lasso回归的R函数代码，与R自带的Lasso回归进行比较。使用了Bostan2与Boston3数据集，最后将lambda.min与lambda.lse的Lasso回归、经过lasso筛选features的重新线性回归、线性回归、lambda.min与lambda.lse的岭回归和PCR模型进行了比较</p>
-        <p>2021-10-2<p>
-      </div>
-    </div>
-
-      
-      
-    <div class="w3-row w3-margin w3-card">
-      <div class="w3-third ">
-      <a href="stat510-hw3.html"><img src="EM-cover.png" alt="Norway" style="width:300px;height:200px" class="w3-hover-opacity"></a>
-      </div> 
-      <div class="w3-twothird w3-container">
-        <h4><a href="stat510-hw3.html" title="EM" target="_blank" class="w3-hover-opacity">EM算法</a></h4>
-        <p>本文分享了EM期望最大算法的两个实践案例，一个是关于两分类的GMM高斯混合模型，一个是多项分布的混合主题模型，理论部分推导了两个模型的期望最大时的隐变量与待估参数，最后使用R根据理论推导进行了实现。</p>
-        <p>2021-10-2<p>
-      </div>
-    </div>
-    
-    
-
-
-  <!-- Images of Me -->
-  <div class="w3-row-padding w3-padding-16" id="about">
-    <div class="w3-col m6">
-      <img src="INWUT.jpg" alt="Me" style="width:100%">
-    </div>
-    <div class="w3-col m6">
-      <img src="moon.jpg" alt="Me" style="width:100%">
-    </div>
-  </div>
-
-  <div class="w3-container w3-padding-large">
-    <h4><b>关于我</b></h4>
-    <p>本人周臻，熟悉我的人喜欢叫我周至秦，生于上个世纪末一个江南小城，浑浑噩噩度过了二十有三的光阴，有道是“敌视现实，虚构远方，东张西望，一无所长，四体不勤，五谷不分，文不能测字，武不能防身”。</p>
-    <p>求学于江城南湖畔，目前辗转越洋漂亮国读研，本科计算数学，硕士统计与计算机。五分钟热度选手，会一点matlab、python、R、SQL，碰上有趣的偶尔建立建立模型，摆弄摆弄代码，谨以此个人网页记录学习生活，以求不至于被我那健忘的脑袋忘喽。</p>
-    <hr>
-    </div>
-    <p>
-      <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom">
-        <i class="fa fa-download w3-margin-right"></i><a href="Zhen Zhou CV-20230501.pdf">Resume (In English)</a>
-      </button>
-      <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom">
-        <i class="fa fa-download w3-margin-right"></i><a href="Zhen Zhou CV中文-0923.pdf">简历 (中文)</a>
-      </button>
-    </p>
-    <hr>
-    
-  
   <!-- Contact Section -->
-  <div class="w3-container w3-padding-large w3-grey">
-    <h4 id="contact"><b>Contact Me</b></h4>
-    <div class="w3-row-padding w3-center w3-padding-24" style="margin:0 -16px">
-      <div class="w3-third w3-dark-grey">
-        <p><i class="fa fa-envelope w3-xxlarge w3-text-light-grey"></i></p>
-        <p>zhenz5@illinois.edu </br>  zhouzhen20210601@163.com</p>
-      </div>
-      <div class="w3-third w3-teal">
-        <p><i class="fa fa-map-marker w3-xxlarge w3-text-light-grey"></i></p>
-        <p>Champaign, US </br>  Liyang, China</p>
-      </div>
-      <div class="w3-third w3-dark-grey">
-        <p><i class="fa fa-phone w3-xxlarge w3-text-light-grey"></i></p>
-        <p>86-15623301327 </br> 1-2172000921</p>
+  <section class="contact-section" id="contact">
+    <div class="contact-container">
+      <h2 class="section-title" style="text-align: center;">联系方式</h2>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <i class="fas fa-envelope"></i>
+          <h3>邮箱</h3>
+          <p>zhenz5@illinois.edu<br>zhouzhen20210601@163.com</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-map-marker-alt"></i>
+          <h3>位置</h3>
+          <p>Champaign, US<br>Liyang, China</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-phone"></i>
+          <h3>电话</h3>
+          <p>+86 15623301327<br>+1 2172000921</p>
+        </div>
       </div>
     </div>
+  </section>
 
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-links">
+      <a href="https://github.com/Zhenz2020" target="_blank" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/%E8%87%BB-%E5%91%A8-7385b2219/" target="_blank" title="LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a href="mailto:zhenz5@illinois.edu" title="Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </div>
+    <p>&copy; 2023-2024 Zhen Zhou. All rights reserved. | 使用 <i class="fas fa-heart" style="color: #e74c3c;"></i> 和 GitHub Pages 构建</p>
+  </footer>
 
+  <!-- JavaScript -->
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+    
+    function updateThemeIcon(theme) {
+      themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    }
 
-  
+    // Search Functionality
+    const searchInput = document.getElementById('searchInput');
+    const postsGrid = document.getElementById('postsGrid');
+    const postCards = document.querySelectorAll('.post-card');
+    const noResults = document.getElementById('noResults');
 
-<!-- End page content -->
-</div>
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      filterPosts();
+    });
 
-<script>
-// Script to open and close sidebar
-function w3_open() {
-    document.getElementById("mySidebar").style.display = "block";
-    document.getElementById("myOverlay").style.display = "block";
-}
- 
-function w3_close() {
-    document.getElementById("mySidebar").style.display = "none";
-    document.getElementById("myOverlay").style.display = "none";
-}
-</script>
+    // Filter Tags
+    const filterTags = document.querySelectorAll('.filter-tag');
+    let currentFilter = 'all';
 
-</body>
-</html>
-<!-- End page content -->
-</div>
+    filterTags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        filterTags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        currentFilter = tag.dataset.filter;
+        filterPosts();
+      });
+    });
 
-<script>
-// Script to open and close sidebar
-function w3_open() {
-    document.getElementById("mySidebar").style.display = "block";
-    document.getElementById("myOverlay").style.display = "block";
-}
- 
-function w3_close() {
-    document.getElementById("mySidebar").style.display = "none";
-    document.getElementById("myOverlay").style.display = "none";
-}
-</script>
+    function filterPosts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      let visibleCount = 0;
 
+      postCards.forEach(card => {
+        const category = card.dataset.category;
+        const tags = card.dataset.tags.toLowerCase();
+        const title = card.querySelector('.post-title').textContent.toLowerCase();
+        const excerpt = card.querySelector('.post-excerpt').textContent.toLowerCase();
+        
+        const matchesSearch = title.includes(searchTerm) || 
+                             excerpt.includes(searchTerm) || 
+                             tags.includes(searchTerm);
+        const matchesFilter = currentFilter === 'all' || category === currentFilter;
+
+        if (matchesSearch && matchesFilter) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Active Navigation Link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinksContainer = document.querySelector('.nav-links');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinksContainer.style.display = navLinksContainer.style.display === 'flex' ? 'none' : 'flex';
+    });
+  </script>
 </body>
 </html>
